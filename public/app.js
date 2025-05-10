@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const nextFileBtn = document.getElementById('next-file');
   
   let allFiles = [];
+  let sortedAllFiles = []
   let currentFileIndex = -1;
 
   try {
@@ -26,11 +27,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('files:',allFiles)
     updateDiffStats(allFiles);
     buildTree(allFiles);
-    
+    document.querySelectorAll('.tree-node.file').forEach(node => {
+      const filePath = node.dataset.path;
+      const matchedFile = allFiles.find(f => f.fileName === filePath);
+      if (matchedFile) {
+        sortedAllFiles.push(matchedFile);
+      }
+    });
+    console.log('sortedAllFiles',sortedAllFiles)
     // 默认显示第一个文件
-    if (allFiles.length > 0) {
+    if (sortedAllFiles.length > 0) {
       currentFileIndex = 0;
-      displayDiff(allFiles[currentFileIndex]);
+      displayDiff(sortedAllFiles[currentFileIndex]);
+      document.querySelector(`.tree-node.file[data-path="${sortedAllFiles[currentFileIndex].fileName}"]`).classList.add('selected');
     }
   } catch (err) {
     console.error('加载或解析 diff 失败:', err);
@@ -68,14 +77,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   function navigateFile(direction) {
-    if (allFiles.length === 0) return;
+    if (sortedAllFiles.length === 0) return;
     
-    currentFileIndex = (currentFileIndex + direction + allFiles.length) % allFiles.length;
-    displayDiff(allFiles[currentFileIndex]);
+    currentFileIndex = (currentFileIndex + direction + sortedAllFiles.length) % sortedAllFiles.length;
+    displayDiff(sortedAllFiles[currentFileIndex]);
     console.log()
     // 滚动到选中的文件
-    const selectedNode = document.querySelector(`.tree-node.file[data-path="${allFiles[currentFileIndex].fileName}"]`);
-    console.log('selectedNode',selectedNode)
+    const selectedNode = document.querySelector(`.tree-node.file[data-path="${sortedAllFiles[currentFileIndex].fileName}"]`);
     if (selectedNode) {
       selectedNode.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       document.querySelectorAll('.tree-node.selected').forEach(n => n.classList.remove('selected'));
