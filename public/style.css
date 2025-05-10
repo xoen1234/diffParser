@@ -231,26 +231,33 @@ body {
   border-radius: 3px;
 }
 
+/* 新增文件 - 绿色系（更柔和的绿色） */
 .status-added {
-  background-color: #dcffe4;
-  color: #22863a;
+  background-color: #e6ffed;  /* 浅绿背景 */
+  color: #2da44e;            /* 深绿文字 */
+  border-left: 3px solid #2da44e; /* 左侧标识条 */
 }
 
+/* 删除文件 - 红色系（降低饱和度） */
 .status-removed {
-  background-color: #ffd7d5;
-  color: #cb2431;
+  background-color: #ffebe9;  /* 浅红背景 */
+  color: #cf222e;            /* 深红文字 */
+  border-left: 3px solid #cf222e;
 }
 
+/* 修改文件 - 黄色系（提高可读性） */
 .status-modified {
-  background-color: #fff5b1;
-  color: #b08800;
+  background-color: #fff8c5;  /* 浅黄背景 */
+  color: #9a6700;            /* 深棕黄文字 */
+  border-left: 3px solid #9a6700;
 }
 
+/* 重命名文件 - 蓝色系（更专业的蓝色） */
 .status-renamed {
-  background-color: #dbedff;
-  color: #0366d6;
+  background-color: #ddf4ff;  /* 浅蓝背景 */
+  color: #0969da;            /* 深蓝文字 */
+  border-left: 3px solid #0969da;
 }
-
 /* 新增左右对比布局样式 */
 .diff-container {
   display: flex;
