@@ -257,7 +257,7 @@ function createTreeDom(obj, parent, flatFiles,path = '') {
 }
 
 function displayDiff(file) {
-  console.log('file',file)
+  console.log('displayingfile',file)
   const diffContent = document.getElementById('diff-content');
   const filePathEl = document.getElementById('file-path');
   
