@@ -105,7 +105,7 @@ body {
 }
 
 .tree-node.file > .node-label {
-  padding-left: 25px;
+  padding-left: 10px;
 }
 
 .tree-node.collapsed > .children {
@@ -287,4 +287,43 @@ body {
   padding: 5px 10px;
   font-weight: bold;
   z-index: 1;
+}
+
+
+/* 容器布局 */
+.container {
+  display: flex;
+  height: calc(100vh - 50px);
+  position: relative;
+}
+
+/* 侧边栏默认宽度 */
+.sidebar {
+  width: 450px;
+  min-width: 150px;
+  max-width: 70%;
+  height: 100%;
+  overflow: auto;
+  position: relative;
+  z-index: 1;
+  background: var(--secondary-color);
+  transition: width 0.2s ease;
+}
+
+.sidebar-resizer {
+  width: 8px;
+  background: var(--border-color);
+  cursor: col-resize;
+  flex-shrink: 0;
+  transition: background 0.2s;
+  position: relative;
+  z-index: 2;
+}
+
+.content {
+  flex: 1;
+  min-width: 300px;
+  height: 100%;
+  overflow: auto;
+  position: relative;
 }

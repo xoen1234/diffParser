@@ -21,35 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (!response.ok) throw new Error(`加载失败（状态码 ${response.status}）`);
       diffText = await response.text();
       filenameEl.textContent = `加载自: ${new URL(diffUrl).pathname.split('/').pop()}`;
-    } else {
-      // 使用示例数据
-      diffText = `diff --git a/README.md b/README.md
-index 1234567..89abcde 100644
---- a/README.md
-+++ b/README.md
-@@ -1,5 +1,6 @@
- # 项目名称
--这是旧的项目描述。
-+这是新的项目描述。
-+新增了一行内容。
- 
- ## 功能特性
- - 功能1
-@@ -10,3 +11,4 @@ index 1234567..89abcde 100644
- ## 安装
- 
- 使用 npm 安装：
-+npm install
-diff --git a/src/index.js b/src/index.js
-new file mode 100644
-index 0000000..e69de29
-diff --git a/src/utils.js b/src/utils.js
-deleted file mode 100644
-index e69de29..0000000
-`;
-      filenameEl.textContent = '示例 diff 数据';
-    }
-
+    } 
     allFiles = parseDiff(diffText);
     console.log('files:',allFiles)
     updateDiffStats(allFiles);
@@ -111,11 +83,66 @@ index e69de29..0000000
   }
 
   function updateDiffStats(files) {
-    const added = files.filter(f => f.newPath && !f.oldPath).length;
-    const removed = files.filter(f => !f.newPath && f.oldPath).length;
-    const modified = files.filter(f => f.newPath && f.oldPath && f.newPath === f.oldPath).length;
-    const renamed = files.filter(f => f.newPath && f.oldPath && f.newPath !== f.oldPath).length;
+    const added = files.filter(f => f.fileStatus == 'add').length;
+    const removed = files.filter(f => f.fileStatus == 'delete').length;
+    const modified = files.filter(f => f.fileStatus == 'modify').length;
+    const renamed = files.filter(f => f.fileStatus == 'rename').length;
     
     diffStatsEl.textContent = `${files.length} 个文件 (${added} 新增, ${removed} 删除, ${modified} 修改, ${renamed} 重命名)`;
   }
+  
+  setupSidebarResizer();
+
 });
+
+
+function setupSidebarResizer() {
+  const container = document.querySelector('.container');
+  const sidebar = document.querySelector('.sidebar');
+  const content = document.querySelector('.content');
+  
+  // 确保DOM结构正确
+  const resizer = document.createElement('div');
+  resizer.className = 'sidebar-resizer';
+  container.insertBefore(resizer, content); // 将resizer放在sidebar和content之间
+
+  let isResizing = false;
+  let lastX = 0;
+
+  resizer.addEventListener('mousedown', (e) => {
+    isResizing = true;
+    lastX = e.clientX;
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none'; // 防止拖动时选中文本
+    e.preventDefault(); // 防止默认行为
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isResizing) return;
+    const currentWidth = parseInt(getComputedStyle(sidebar).width);
+    console.log('e',e.clientX)
+    console.log('lastX',lastX)
+    const dx = e.clientX - lastX;
+    lastX = e.clientX;
+    console.log('dx',dx)   
+    // const newWidth = currentWidth + dx;
+    const newWidth = e.clientX
+    console.log('newWidth',newWidth)
+    // 限制最小和最大宽度
+    const minWidth = 150;
+    const maxWidth = container.clientWidth * 0.7;
+    console.log('maxWidth',maxWidth) 
+    if (newWidth >= minWidth && newWidth <= maxWidth) {
+      sidebar.style.width = `${newWidth}px`;
+      // content.style.marginLeft = `${newWidth + 8}px`; // 8px是resizer宽度
+    }
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (isResizing) {
+      isResizing = false;
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    }
+  });
+}

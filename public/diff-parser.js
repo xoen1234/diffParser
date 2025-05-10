@@ -45,6 +45,10 @@ function parseDiff(diffText) {
       if (line.startsWith('Index: ')) {
         continue;
       }
+      if (line.startsWith('deleted file mode')) {
+        currentFile.fileStatus = currentFile.fileStatus||'delete'
+        continue;
+      }
       if (line.startsWith('rename from')) {
         currentFile.oldPath = line 
         currentFile.fileStatus = currentFile.fileStatus||'rename'
