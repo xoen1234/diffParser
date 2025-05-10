@@ -72,9 +72,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     currentFileIndex = (currentFileIndex + direction + allFiles.length) % allFiles.length;
     displayDiff(allFiles[currentFileIndex]);
-    
+    console.log()
     // 滚动到选中的文件
-    const selectedNode = document.querySelector(`.tree-node.file[data-path="${allFiles[currentFileIndex].newPath}"]`);
+    const selectedNode = document.querySelector(`.tree-node.file[data-path="${allFiles[currentFileIndex].fileName}"]`);
+    console.log('selectedNode',selectedNode)
     if (selectedNode) {
       selectedNode.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       document.querySelectorAll('.tree-node.selected').forEach(n => n.classList.remove('selected'));
@@ -120,18 +121,13 @@ function setupSidebarResizer() {
   document.addEventListener('mousemove', (e) => {
     if (!isResizing) return;
     const currentWidth = parseInt(getComputedStyle(sidebar).width);
-    console.log('e',e.clientX)
-    console.log('lastX',lastX)
     const dx = e.clientX - lastX;
     lastX = e.clientX;
-    console.log('dx',dx)   
     // const newWidth = currentWidth + dx;
     const newWidth = e.clientX
-    console.log('newWidth',newWidth)
     // 限制最小和最大宽度
     const minWidth = 150;
     const maxWidth = container.clientWidth * 0.7;
-    console.log('maxWidth',maxWidth) 
     if (newWidth >= minWidth && newWidth <= maxWidth) {
       sidebar.style.width = `${newWidth}px`;
       // content.style.marginLeft = `${newWidth + 8}px`; // 8px是resizer宽度

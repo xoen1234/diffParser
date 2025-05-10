@@ -142,12 +142,13 @@ function buildTree(files) {
       current = current[part];
     }
   });
-  console.log(root)
+  console.log('root',root)
   createTreeDom(root, treeContent,flatFiles);
 }
 // 渲染树结构为 DOM
 function createTreeDom(obj, parent, flatFiles,path = '') {
     // 先处理文件夹，再处理文件
+  
   const keys = Object.keys(obj).sort((a, b) => {
     const isAFolder = !obj[a].__file;
     const isBFolder = !obj[b].__file;
@@ -170,7 +171,7 @@ function createTreeDom(obj, parent, flatFiles,path = '') {
       // 文件节点
       const file = obj[key].__file;
       item.classList.add('file');
-      item.dataset.path = fullPath;
+      item.dataset.path = file.fileName;
       
       const label = document.createElement('div');
       label.classList.add('node-label');
@@ -216,6 +217,7 @@ function createTreeDom(obj, parent, flatFiles,path = '') {
         
         // 更新选中状态
         document.querySelectorAll('.tree-node.selected').forEach(n => n.classList.remove('selected'));
+        console.log(item)
         item.classList.add('selected');
       });
     } else {

@@ -2,8 +2,8 @@
   --primary-color: #2c3e50;
   --secondary-color: #f8f9fa;
   --border-color: #ddd;
-  --added-color: #e6ffed;
-  --removed-color: #ffebe9;
+  --added-color: #baf1ca;
+  --removed-color: #f4c0bb;
   --highlight-color: #fffbdd;
 }
 
@@ -87,7 +87,10 @@ body {
   cursor: pointer;
   user-select: none;
 }
-
+/* 最简单版本 - 仅添加背景色 */
+.selected {
+  background-color: #aecbe5; /* 浅蓝色背景 */
+}
 .tree-node .node-label {
   padding: 4px 5px;
   border-radius: 3px;
