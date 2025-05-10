@@ -388,7 +388,7 @@ function createTreeDom(obj, parent, flatFiles,path = '') {
       
       // 文件夹图标
       const icon = document.createElement('i');
-      icon.className = 'far fa-folder';
+      icon.className = 'far fa-folder-open';
       label.appendChild(icon);
       
       // 文件夹名
