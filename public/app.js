@@ -178,6 +178,7 @@ function parseDiff(diffText) {
     let isBinary = false;
     files.push(currentFile);
     let filePreFix = ''
+    let filePreFix1 = ''
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       currentFile.diff.push(line);
@@ -192,10 +193,8 @@ function parseDiff(diffText) {
       if (line.startsWith('diff --git')) {
         // 解析文件名（更健壮的方式）
         // const match = line.match(/^diff --git a\/(.+?) b\/(.+?)$/);
-        let fileName = line.split(' ')[3]
-        let array = fileName.split('/')
-        filePreFix = array[0]+'/'+array[1]+'/'
-        currentFile.fileName=fileName.replace(filePreFix,'')    
+        let fileName = line.split(' ')[3] //只取新的作为文件名
+        currentFile.fileName = fileName.split(fileName.split('/')[1]+'/')[1]; 
         continue;
       }
 
@@ -219,13 +218,15 @@ function parseDiff(diffText) {
         continue;
       }
       if (line.startsWith('--- ')) {
-        currentFile.oldPath = line.slice(4).trim().split('\t')[0].replace(filePreFix,'');
+        currentFile.oldPath = line.slice(4).trim().split('\t')[0];
+        currentFile.oldPath = currentFile.oldPath.split(currentFile.oldPath.split('/')[1]+'/')[1];
         // currentFile.diff.push(line);
         continue;
       }
 
       if (line.startsWith('+++ ')) {
         currentFile.newPath = line.slice(4).trim().split('\t')[0];
+        currentFile.newPath = currentFile.newPath.split(currentFile.newPath.split('/')[1]+'/')[1];
         // currentFile.diff.push(line);
         continue;
       }
