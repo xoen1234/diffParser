@@ -159,12 +159,14 @@ function setupSidebarResizer() {
 function parseDiff(diffText) {
   // 1. 先按文件分割整个diff文本
   const fileSections = diffText.split(/(?=^diff --git)/m);
+  console.log('fileSections',fileSections)
   const files = [];
 
   // 2. 逐个处理每个文件块
   for (const section of fileSections) {
     if (!section.trim()) continue;  
     const lines = section.split('\n');
+    // const lines = section.split('/\r?\n/');
     let currentFile =  {
           rawfileName: '',
           fileName: '',  // 使用旧路径作为基准文件名
@@ -173,7 +175,9 @@ function parseDiff(diffText) {
           newPath: null,
           chunks: [],
           isBinary: false,
-          diff: []
+          diff: [],
+          rawLines:lines,
+          rawFile:section
         };;
     let isBinary = false;
     files.push(currentFile);
@@ -254,7 +258,10 @@ function parseDiff(diffText) {
         }
         
         currentFile.chunks.push(chunk);
-        // currentFile.diff.push(line);
+        let additionLine = line.split('@@ ')[2];
+        if(additionLine){
+          chunk.lines.push(additionLine)
+        }
         continue;
       }
 
@@ -377,7 +384,6 @@ function createTreeDom(obj, parent, flatFiles,path = '') {
         
         // 更新选中状态
         document.querySelectorAll('.tree-node.selected').forEach(n => n.classList.remove('selected'));
-        console.log(item)
         item.classList.add('selected');
       });
     } else {
