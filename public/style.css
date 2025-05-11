@@ -4,6 +4,7 @@
   --border-color: #ddd;
   --added-color: #baf1ca;
   --removed-color: #f4c0bb;
+  --head-color:#d2d6d9;
   --highlight-color: #fffbdd;
 }
 
@@ -217,6 +218,10 @@ body {
 
 .diff-line-removed {
   background-color: var(--removed-color);
+}
+
+.diff-line-head {
+  background-color: var(--head-color);
 }
 
 .diff-line-neutral {

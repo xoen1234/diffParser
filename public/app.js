@@ -258,6 +258,7 @@ function parseDiff(diffText) {
         }
         
         currentFile.chunks.push(chunk);
+        chunk.lines.push(line.split(line.split('@@ ')[2])[0])
         let additionLine = line.split('@@ ')[2];
         if(additionLine){
           chunk.lines.push(additionLine)
@@ -474,6 +475,10 @@ function displayDiff(file) {
       } else if (line.startsWith('-') && !line.startsWith('---')) {
         // 删除行（只显示在左侧）
         appendLine(sideOld, 'old', oldLine++, line.slice(1), 'removed');
+      } else if (line.startsWith('@@')) {
+        // 块起始行（只显示在左侧）
+        appendLine(sideOld, 'old', '', line.slice(0), 'head');
+        appendLine(sideNew, 'new', '', ' ', 'head');
       } else {
         // 未修改行（两侧同步显示）
         appendLine(sideOld, 'old', oldLine++, line.startsWith(' ') ? line.slice(1) : line, 'context');
@@ -490,8 +495,24 @@ function appendLine(side, type, lineNum, text, lineType) {
   
   const lineNumEl = document.createElement('div');
   lineNumEl.className = 'diff-line-num';
-  lineNumEl.textContent = lineType !== (type === 'new' ? 'removed' : 'added') ? lineNum : '';
-  
+  switch(lineType){
+    case 'head':
+         lineNumEl.textContent = ''
+      break;
+    case 'head-new':
+         lineNumEl.textContent = ''
+      break;
+    case 'removed': // 只有旧的有可能？
+       lineNumEl.textContent =  lineNum ;
+      break
+    case 'added':
+      lineNumEl.textContent =  lineNum ;
+      break
+    case 'context':
+      lineNumEl.textContent =  lineNum ;
+      break
+  }
+
   const lineContent = document.createElement('div');
   lineContent.className = 'diff-line-content';
   lineContent.textContent = text;
