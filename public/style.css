@@ -198,7 +198,7 @@ body {
 }
 
 .diff-line-num {
-  min-width: 50px;
+  min-width: 25px;
   padding: 0 10px;
   text-align: right;
   color: rgba(27,31,35,0.3);
@@ -275,7 +275,7 @@ body {
 
 .diff-side {
   flex: 1;
-  overflow-y: auto;
+  /* overflow-y: auto; */
   position: relative;
 }
 
@@ -319,7 +319,7 @@ body {
 }
 
 .sidebar-resizer {
-  width: 8px;
+  width: 6px;
   background: var(--border-color);
   cursor: col-resize;
   flex-shrink: 0;
