@@ -466,7 +466,7 @@ function displayDiff(file) {
   diffContent.appendChild(container);
 
   // 渲染对比内容
-  file.chunks.forEach(chunk => {
+  file.chunks.forEach((chunk,index) => {
     let oldLine = chunk.oldStart;
     let newLine = chunk.newStart;
     olddomLine = 0
@@ -480,7 +480,8 @@ function displayDiff(file) {
         appendLine(sideOld, 'old', oldLine++, line.slice(1), 'removed');
       } else if (line.startsWith('@@')) {
         // 块起始行（只显示在左侧）
-        appendLine(sideOld, 'old', '', line.slice(0), 'head');
+        let fre = index + 1
+        appendLine(sideOld, 'old', '', '第'+fre+'处修改', 'head');
         appendLine(sideNew, 'new', '', ' ', 'head');
       } else {
         // 未修改行（两侧同步显示）
