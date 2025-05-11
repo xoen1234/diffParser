@@ -429,6 +429,8 @@ function createIcon(type) {
   icon.alt = type;
   return icon;
 }
+let olddomLine = 0
+let newdomLine = 0
 function displayDiff(file) {
   console.log('displayingfile',file)
   currentFileIndex = file.fileSeq
@@ -443,7 +445,7 @@ function displayDiff(file) {
     return;
   }
   
-  filePathEl.textContent = file.fileName;
+  filePathEl.textContent = file.fileName + '\t(' + file.chunks.length+'处修改)';
 
   // 创建左右对比容器
   const container = document.createElement('div');
@@ -467,7 +469,8 @@ function displayDiff(file) {
   file.chunks.forEach(chunk => {
     let oldLine = chunk.oldStart;
     let newLine = chunk.newStart;
-    
+    olddomLine = 0
+    newdomLine = 0
     chunk.lines.forEach(line => {
       if (line.startsWith('+') && !line.startsWith('+++')) {
         // 新增行（只显示在右侧）
@@ -481,15 +484,31 @@ function displayDiff(file) {
         appendLine(sideNew, 'new', '', ' ', 'head');
       } else {
         // 未修改行（两侧同步显示）
+        if(olddomLine != newdomLine){
+           if(olddomLine > newdomLine){
+              let count = olddomLine-newdomLine
+              for(i=0;i<count;i++){
+                appendLine(sideNew, 'new', '', ' ', 'blank-context');
+              }
+           }else{
+              let count = newdomLine-olddomLine
+              for(i=0;i<count;i++){
+                appendLine(sideOld, 'old', '', ' ', 'blank-context');
+              }
+           }
+              
+           
+        }
         appendLine(sideOld, 'old', oldLine++, line.startsWith(' ') ? line.slice(1) : line, 'context');
         appendLine(sideNew, 'new', newLine++, line.startsWith(' ') ? line.slice(1) : line, 'context');
       }
     });
   });
-}
 
-// 辅助函数：添加行到指定侧
+}
+  // 辅助函数：添加行到指定侧
 function appendLine(side, type, lineNum, text, lineType) {
+  if(type == 'new'){ newdomLine++}else{olddomLine++ }
   const lineEl = document.createElement('div');
   lineEl.className = `diff-line diff-line-${lineType}`;
   
@@ -500,6 +519,9 @@ function appendLine(side, type, lineNum, text, lineType) {
          lineNumEl.textContent = ''
       break;
     case 'head-new':
+         lineNumEl.textContent = ''
+      break;
+    case 'blank-context':
          lineNumEl.textContent = ''
       break;
     case 'removed': // 只有旧的有可能？
